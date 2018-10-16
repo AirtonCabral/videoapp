@@ -6,7 +6,7 @@ import * as serviceWorker from './serviceWorker';
 
 import '../node_modules/bootstrap/dist/css/bootstrap-reboot.css';
 import '../node_modules/bootstrap/dist/css/bootstrap.css';
-import '../node_modules/bootstrap/dist/css/bootstrap-theme.css'
+import './css fix/bootstrap-theme.css';
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
