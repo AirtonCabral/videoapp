@@ -1,49 +1,48 @@
 import React, { Component } from 'react';
 
+import {BrowserRouter as Router, Link } from 'react-router-dom'
 import AliceCarousel from 'react-alice-carousel';
 import "react-alice-carousel/lib/alice-carousel.css";
 
 import Loading from './../../img/loading.gif';
 import './home.sass';
-var axios = require('axios');
+
+import MovieCard from './../../components/movieCard/movieCard';
 class Home extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			movies: [],
-			isLoading: true
+			//isLoading: false
+			// movies: props.movies
 		};
 	}
 
 	responsive = {
-		0: { items: 1 },
-		600: { items: 2 },
-		1024: { items: 4 },
+		0: { items: 2 },
+		600: { items: 3 },
+		1024: { items: 6 },
 	};
 
-	componentDidMount() {
-		axios.get("http://localhost:8000/api")
-			.then(response => {
-				this.setState({ movies: response.data.entries });
-				this.setState({ isLoading: true });
-				console.log(this.state.movies, this.state.isLoading)
-			})
-			.catch(error => {
-				this.setState({ isLoading: false });
-			});
+	chooseMovie = (x) => {
+		var movieChoosen = x;
+		var oldMovieSelected = this.props.movieSelected;
+		oldMovieSelected = movieChoosen;
+		{ this.props.movieSelected = oldMovieSelected; }
 	}
 
 	render() {
-		const item = this.state.movies.map((movie) => {
+		const isLoading = this.props.isLoading && MovieCard.length !== 0
+		const item = this.props.movies.map((movie) => {
 			return (
-				<div key={movie.id}>
-					<img src={movie.images[0].url} alt={movie.title} />
+				<div key={movie.id}  onClick={this.chooseMovie.bind(this,movie)}>
+					<Link to={"/" + movie.id}>
+						<img src={movie.images[0].url} alt={movie.title}/>
 					<p>{movie.title}</p>
+					</Link>
 				</div>
 			)
 		});
-		const isLoading = this.state.isLoading && item.length !== 0
 		return (
 			<div id='Home'>
 				<img src={Loading} alt='loading...' className= {isLoading ? 'HideLoading' : 'Show'}/>
@@ -57,7 +56,7 @@ class Home extends Component {
 					mouseDragEnabled={true}
 					autoPlayInterval={2000}
 					className= {isLoading ? 'Show' : 'Hide'}>
-					</AliceCarousel>
+				</AliceCarousel>
 			</div>
 		)
 	}
